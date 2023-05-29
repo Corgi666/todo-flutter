@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:notification/controller/theme_controller.dart';
+import 'package:notification/services/notification_service.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({super.key});
@@ -10,6 +11,7 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
+  var notifyHelper;
   ThemeController controller = Get.put(ThemeController());
   Themes themes = Themes();
   bool isplay = false;
@@ -19,6 +21,7 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
   void initState() {
     _controller =
         AnimationController(vsync: this, duration: Duration(seconds: 1));
+    notifyHelper = NotifyHelper();
     super.initState();
   }
 
@@ -47,10 +50,7 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
         ],
       ),
       body: Column(
-        children: [
-          GetBuilder<ThemeController>(
-              builder: (_) => Text(controller.toggletheme.toString()))
-        ],
+        children: [Text(Get.isDarkMode ? "DarkMode" : "Light Mode")],
       ),
     );
   }

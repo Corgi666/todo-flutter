@@ -2,7 +2,7 @@
 
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:notification/screens/homepage.dart';
+import 'package:notification/screens/homepage_screen.dart';
 
 import 'controller/theme_controller.dart';
 
