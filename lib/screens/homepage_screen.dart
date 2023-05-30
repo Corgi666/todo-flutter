@@ -40,6 +40,7 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
   }
 
   final dark = false.obs;
+  DateTime _selectedDate = DateTime.now();
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -65,29 +66,30 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
       body: Container(
         margin: EdgeInsets.symmetric(horizontal: 20),
         child: Column(
-          children: [
-            topSection(),
-            Container(
-                height: 150,
-                child: CalendarTimeline(
-                  leftMargin: 20,
-                  monthColor: Colors.blueGrey,
-                  dayColor: Colors.teal[200],
-                  activeDayColor: Colors.white,
-                  activeBackgroundDayColor: Colors.redAccent[100],
-                  selectableDayPredicate: (date) => date.day != 23,
-                  dotsColor: Color(0xFF333A47),
-                  initialDate: DateTime.now(),
-                  firstDate: DateTime(2022),
-                  lastDate: DateTime(2024),
-                  onDateSelected: (p0) {
-                    print(p0);
-                  },
-                ))
-          ],
+          children: [topSection(), _dateSelectSection()],
         ),
       ),
     );
+  }
+
+  Widget _dateSelectSection() {
+    return Container(
+        height: 150,
+        child: CalendarTimeline(
+          leftMargin: 20,
+          monthColor: Colors.blueGrey,
+          dayColor: Colors.teal[200],
+          activeDayColor: Colors.white,
+          activeBackgroundDayColor: Colors.redAccent[100],
+          selectableDayPredicate: (date) => date.day != 23,
+          dotsColor: Color(0xFF333A47),
+          initialDate: DateTime.now(),
+          firstDate: DateTime(2022),
+          lastDate: DateTime(2024),
+          onDateSelected: (p0) {
+            _selectedDate = p0;
+          },
+        ));
   }
 
   Widget topSection() {
@@ -103,7 +105,9 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
               'Tody',
               style: headingStyle,
             ),
-            IconButton(onPressed: () => null, icon: Icon(Icons.add)),
+            IconButton(
+                onPressed: () => Get.toNamed('/addtask'),
+                icon: Icon(Icons.add)),
           ],
         ),
         // feild(controller: namecontroller)
