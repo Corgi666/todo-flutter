@@ -11,23 +11,25 @@ final darkHeader = Colors.grey[800];
 
 class Themes {
   static final light = ThemeData(
+      scaffoldBackgroundColor: white,
       primaryColor: primaryColor,
       brightness: Brightness.light,
-      appBarTheme: AppBarTheme(color: primaryColor));
+      appBarTheme: const AppBarTheme(color: white));
   static final dark = ThemeData(
+      scaffoldBackgroundColor: darkGrey,
       primaryColor: darkHeader,
       brightness: Brightness.dark,
-      appBarTheme: AppBarTheme(color: darkGrey));
-  bool themeToggle = false;
+      appBarTheme: const AppBarTheme(color: darkGrey));
+  // bool themeToggle = false;
 }
 
-class ThemeController extends GetxController{
+class ThemeController extends GetxController {
   // final toggletheme = false.obs;
   bool _toggletheme = false;
   get toggletheme => _toggletheme;
-  void ToggleTheme (){
-   _toggletheme=!_toggletheme;
-   update();
-   print(_toggletheme);
+  void ToggleTheme() {
+    _toggletheme = !_toggletheme;
+    update();
+    print(_toggletheme);
   }
 }

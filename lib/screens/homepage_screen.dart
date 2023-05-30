@@ -1,3 +1,5 @@
+// ignore_for_file: prefer_const_constructors
+
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:notification/controller/theme_controller.dart';
@@ -12,7 +14,7 @@ class HomePage extends StatefulWidget {
 
 class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
   var notifyHelper;
-  ThemeController controller = Get.put(ThemeController());
+  // ThemeController controller = Get.put(ThemeController());
   Themes themes = Themes();
   bool isplay = false;
   late AnimationController _controller;
@@ -36,17 +38,24 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: context.theme.scaffoldBackgroundColor,
       appBar: AppBar(
+        elevation: 0,
         actions: [
-          Obx(() => IconButton(
-              onPressed: () {
-                dark.value = !dark.value;
-                Get.changeThemeMode(
-                    Get.isDarkMode ? ThemeMode.light : ThemeMode.dark);
-              },
-              icon: dark.value
-                  ? Icon(Icons.brightness_7)
-                  : Icon(Icons.dark_mode_sharp)))
+          Obx(
+            () => IconButton(
+                onPressed: () {
+                  dark.value = !dark.value;
+                  Get.changeThemeMode(
+                      Get.isDarkMode ? ThemeMode.light : ThemeMode.dark);
+                },
+                icon: dark.value
+                    ? Icon(Icons.wb_sunny_outlined)
+                    : Icon(
+                        Icons.dark_mode_outlined,
+                        color: Colors.black,
+                      )),
+          )
         ],
       ),
       body: Column(
