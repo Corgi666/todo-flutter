@@ -14,12 +14,12 @@ class Themes {
       scaffoldBackgroundColor: white,
       primaryColor: primaryColor,
       brightness: Brightness.light,
-      appBarTheme: const AppBarTheme(color: white));
+      appBarTheme: const AppBarTheme(color: white, elevation: 0));
   static final dark = ThemeData(
       scaffoldBackgroundColor: darkGrey,
       primaryColor: darkHeader,
       brightness: Brightness.dark,
-      appBarTheme: const AppBarTheme(color: darkGrey));
+      appBarTheme: const AppBarTheme(color: darkGrey, elevation: 0));
   // bool themeToggle = false;
 }
 
