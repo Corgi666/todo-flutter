@@ -88,6 +88,7 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
           lastDate: DateTime(2024),
           onDateSelected: (p0) {
             _selectedDate = p0;
+            print(_selectedDate);
           },
         ));
   }
