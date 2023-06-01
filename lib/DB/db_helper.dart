@@ -1,5 +1,7 @@
+import 'package:notification/controller/task_controller.dart';
 import 'package:notification/models/task_model.dart';
 import 'package:sqflite/sqflite.dart';
+import 'package:get/get.dart';
 
 class DBHelper {
   static Database? _db;
@@ -43,5 +45,15 @@ CREATE TABLE $_tableName (
 
   static Future<int> insert(TaskModel? task) async {
     return await _db!.insert(_tableName, task!.toJson());
+  }
+
+  static Future<List<Map<String, dynamic>>> query() async {
+    return await _db!.query(_tableName);
+  }
+
+  static delete({required TaskModel task}) async {
+    await _db!.delete(_tableName, where: 'id=?', whereArgs: [task.id]);
+    print('deleted');
+    Get.find<TaskController>().getTask();
   }
 }

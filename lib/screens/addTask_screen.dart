@@ -97,7 +97,7 @@ class _AddTaskScreenState extends State<AddTaskScreen> {
                 controller: _noteController),
             reuseable_Field(
               title: 'Day',
-              hint: DateFormat.yMd().format(
+              hint: DateFormat.yMMMd().format(
                 _dateSelect,
               ),
               widget: GestureDetector(
@@ -218,7 +218,17 @@ class _AddTaskScreenState extends State<AddTaskScreen> {
             )
           ],
         ),
-        reuseable_Button(lable: 'Crete Task', onTap: () => _validateData()),
+        reuseable_Button(
+            lable: 'Crete Task',
+            onTap: () async => await taskController.validateData(
+                titleController: _titleController,
+                noteController: _noteController,
+                dateSelect: _dateSelect,
+                startTime: _startTime,
+                endTime: _endTime,
+                colorSelected: _colorSelected,
+                seletedRemind: _seletedRemind,
+                repeateSelected: _repeateSelected)),
       ],
     );
   }
@@ -257,61 +267,5 @@ class _AddTaskScreenState extends State<AddTaskScreen> {
         });
       }
     }
-  }
-
-  _validateData() {
-    if (_titleController.text.isNotEmpty && _noteController.text.isNotEmpty) {
-      _addTaskToDB();
-      Get.back();
-    } else {
-      if (_titleController.text.isEmpty && _noteController.text.isNotEmpty) {
-        Get.snackbar(
-          'Alert',
-          'Type your Title',
-          snackPosition: SnackPosition.BOTTOM,
-          backgroundColor:
-              Get.isDarkMode ? Colors.white : Colors.grey.withOpacity(0.5),
-          icon: Icon(Icons.warning_amber_rounded),
-        );
-      } else if (_noteController.text.isEmpty &&
-          _titleController.text.isNotEmpty) {
-        Get.snackbar(
-          'Alert',
-          'Type your Note',
-          snackPosition: SnackPosition.BOTTOM,
-          backgroundColor:
-              Get.isDarkMode ? Colors.white : Colors.grey.withOpacity(0.5),
-          icon: Icon(Icons.warning_amber_rounded),
-        );
-      } else if (_titleController.text.isEmpty &&
-          _noteController.text.isEmpty) {
-        Get.snackbar(
-          'Alert',
-          'Title and Note is null',
-          colorText: Get.isDarkMode ? Colors.black : Colors.white,
-          snackPosition: SnackPosition.BOTTOM,
-          backgroundColor:
-              Get.isDarkMode ? Colors.white : Colors.grey.withOpacity(0.5),
-          icon: Icon(
-            Icons.warning_amber_rounded,
-            color: Get.isDarkMode ? Colors.black : Colors.white,
-          ),
-        );
-      }
-    }
-  }
-
-  _addTaskToDB() async {
-    int value = await taskController.addTask(
-        task: TaskModel(
-            title: _titleController.text,
-            note: _noteController.text,
-            date: DateFormat.yMd().format(_dateSelect),
-            startTime: _startTime,
-            endTime: _endTime,
-            color: _colorSelected,
-            remind: _seletedRemind,
-            repeat: _repeateSelected));
-    print('My id is $value');
   }
 }

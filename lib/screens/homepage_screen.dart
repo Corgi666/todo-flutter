@@ -2,6 +2,7 @@
 
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:notification/controller/task_controller.dart';
 
 import 'package:notification/utils/style_config.dart';
 import 'package:notification/controller/theme_controller.dart';
@@ -23,9 +24,11 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
   Themes themes = Themes();
   bool isplay = false;
   late AnimationController _controller;
-  final TextEditingController namecontroller = TextEditingController();
+  final controller = Get.put(TaskController());
+
   @override
   void initState() {
+    controller.getTask();
     _controller =
         AnimationController(vsync: this, duration: Duration(seconds: 1));
     notifyHelper = NotifyHelper();
@@ -35,14 +38,18 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
   @override
   void dispose() {
     // TODO: implement dispose
+    controller.getTask();
     _controller.dispose();
     super.dispose();
   }
 
   final dark = false.obs;
+  final List<Color> _colorList = [primaryColor, pinkColor, yellowColor];
   DateTime _selectedDate = DateTime.now();
+
   @override
   Widget build(BuildContext context) {
+    controller.getTask();
     return Scaffold(
       backgroundColor: context.theme.scaffoldBackgroundColor,
       appBar: AppBar(
@@ -66,7 +73,11 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
       body: Container(
         margin: EdgeInsets.symmetric(horizontal: 20),
         child: Column(
-          children: [topSection(), _dateSelectSection()],
+          children: [
+            topSection(),
+            _dateSelectSection(),
+            showTaskSection(),
+          ],
         ),
       ),
     );
@@ -107,12 +118,95 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
               style: headingStyle,
             ),
             IconButton(
-                onPressed: () => Get.toNamed('/addtask'),
+                onPressed: () async {
+                  await Get.toNamed('/addtask');
+                  // controller.getTask();
+                },
                 icon: Icon(Icons.add)),
           ],
         ),
         // feild(controller: namecontroller)
       ],
+    );
+  }
+
+  Widget showTaskSection() {
+    return Expanded(
+      child: Obx(
+        () => ListView.builder(
+            itemCount: controller.taskList.length,
+            itemBuilder: (context, index) {
+              var colorIndex = controller.taskList[index].color;
+              var taskList = controller.taskList[index];
+              return Container(
+                margin: EdgeInsets.only(right: 20, left: 20, top: 10),
+                height: 100,
+                width: MediaQuery.of(context).size.width,
+                decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(20),
+                    color: _colorList[colorIndex]),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Container(
+                      margin: EdgeInsets.only(left: 10, top: 10, bottom: 10),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          Text(
+                            taskList.title,
+                            style: buttonText,
+                          ),
+                          Row(
+                            children: [
+                              Icon(
+                                Icons.access_time_rounded,
+                                size: 13,
+                                color: Colors.white,
+                              ),
+                              Text(
+                                ' ${taskList.startTime}',
+                                style: buttonText,
+                              ),
+                              Text(
+                                ' - ${taskList.endTime}',
+                                style: buttonText,
+                              )
+                            ],
+                          ),
+                          Text(
+                            taskList.note,
+                            style: buttonText,
+                          )
+                        ],
+                      ),
+                    ),
+                    Container(
+                      padding: EdgeInsets.only(right: 10),
+                      child: Row(
+                        children: [
+                          Container(
+                            margin: EdgeInsets.only(right: 4),
+                            height: 70,
+                            width: 0.5,
+                            color: Colors.grey[200],
+                          ),
+                          RotatedBox(
+                            quarterTurns: 3,
+                            child: Text(
+                              taskList.isCompleted == 1 ? "COMPLETED" : "TODO",
+                              style: buttonText,
+                            ),
+                          )
+                        ],
+                      ),
+                    )
+                  ],
+                ),
+              );
+            }),
+      ),
     );
   }
 }
