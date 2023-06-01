@@ -3,6 +3,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:notification/controller/task_controller.dart';
+import 'package:notification/models/task_model.dart';
 
 import 'package:notification/utils/style_config.dart';
 import 'package:notification/controller/theme_controller.dart';
@@ -10,6 +11,7 @@ import 'package:notification/services/notification_service.dart';
 import 'package:notification/widgets/const_custorm_widget.dart';
 
 import 'package:calendar_timeline/calendar_timeline.dart';
+import 'package:notification/widgets/reuseable_widget.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({super.key});
@@ -138,75 +140,126 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
             itemBuilder: (context, index) {
               var colorIndex = controller.taskList[index].color;
               var taskList = controller.taskList[index];
-              return Container(
-                margin: EdgeInsets.only(right: 20, left: 20, top: 10),
-                height: 100,
-                width: MediaQuery.of(context).size.width,
-                decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(20),
-                    color: _colorList[colorIndex]),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    Container(
-                      margin: EdgeInsets.only(left: 10, top: 10, bottom: 10),
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          Text(
-                            taskList.title,
-                            style: buttonText,
-                          ),
-                          Row(
-                            children: [
-                              Icon(
-                                Icons.access_time_rounded,
-                                size: 13,
-                                color: Colors.white,
-                              ),
-                              Text(
-                                ' ${taskList.startTime}',
-                                style: buttonText,
-                              ),
-                              Text(
-                                ' - ${taskList.endTime}',
-                                style: buttonText,
-                              )
-                            ],
-                          ),
-                          Text(
-                            taskList.note,
-                            style: buttonText,
-                          )
-                        ],
-                      ),
-                    ),
-                    Container(
-                      padding: EdgeInsets.only(right: 10),
-                      child: Row(
-                        children: [
-                          Container(
-                            margin: EdgeInsets.only(right: 4),
-                            height: 70,
-                            width: 0.5,
-                            color: Colors.grey[200],
-                          ),
-                          RotatedBox(
-                            quarterTurns: 3,
-                            child: Text(
-                              taskList.isCompleted == 1 ? "COMPLETED" : "TODO",
+              return GestureDetector(
+                onTap: () => _showButtomSheet(context, taskList),
+                child: Container(
+                  margin: EdgeInsets.only(right: 20, left: 20, top: 10),
+                  height: 100,
+                  width: MediaQuery.of(context).size.width,
+                  decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(20),
+                      color: _colorList[colorIndex]),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Container(
+                        margin: EdgeInsets.only(left: 10, top: 10, bottom: 10),
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            Text(
+                              taskList.title,
                               style: buttonText,
                             ),
-                          )
-                        ],
+                            Row(
+                              children: [
+                                Icon(
+                                  Icons.access_time_rounded,
+                                  size: 13,
+                                  color: Colors.white,
+                                ),
+                                Text(
+                                  ' ${taskList.startTime}',
+                                  style: buttonText,
+                                ),
+                                Text(
+                                  ' - ${taskList.endTime}',
+                                  style: buttonText,
+                                )
+                              ],
+                            ),
+                            Text(
+                              taskList.note,
+                              style: buttonText,
+                            )
+                          ],
+                        ),
                       ),
-                    )
-                  ],
+                      Container(
+                        padding: EdgeInsets.only(right: 10),
+                        child: Row(
+                          children: [
+                            Container(
+                              margin: EdgeInsets.only(right: 4),
+                              height: 70,
+                              width: 0.5,
+                              color: Colors.grey[200],
+                            ),
+                            RotatedBox(
+                              quarterTurns: 3,
+                              child: Text(
+                                taskList.isCompleted == 1
+                                    ? "COMPLETED"
+                                    : "TODO",
+                                style: buttonText,
+                              ),
+                            )
+                          ],
+                        ),
+                      )
+                    ],
+                  ),
                 ),
               );
             }),
       ),
     );
+  }
+
+  _showButtomSheet(BuildContext context, TaskModel task) {
+    Get.bottomSheet(Container(
+      padding: EdgeInsets.only(top: 40, bottom: 20),
+      height: 250,
+      decoration: BoxDecoration(
+        color: darkHeader!.withOpacity(0.3),
+        borderRadius: BorderRadius.only(
+          topLeft: Radius.circular(20),
+          topRight: Radius.circular(20),
+        ),
+      ),
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        children: [
+          Container(
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.spaceAround,
+              children: [
+                reusable_button_BottomSheet(
+                  text: 'Task Completed',
+                  onPressed: () {
+                    setState(() {
+                      task.isCompleted = 1;
+                    });
+                    Get.back();
+                    print(task.isCompleted);
+                  },
+                ),
+                reusable_button_BottomSheet(
+                    text: 'Delete Task',
+                    onPressed: () {
+                      controller.deleteTask(task: task);
+                      Get.back();
+                    })
+              ],
+            ),
+          ),
+          reusable_button_BottomSheet(
+            text: 'Close',
+            onPressed: () => Get.back(),
+          )
+        ],
+      ),
+    ));
   }
 }

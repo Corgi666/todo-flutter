@@ -1,5 +1,7 @@
 import 'package:get/get.dart';
 import 'package:flutter/material.dart';
+import 'package:get/get_connect/http/src/utils/utils.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:notification/utils/style_config.dart';
 import 'package:notification/controller/theme_controller.dart';
 
@@ -75,31 +77,29 @@ Widget reuseable_Field(
   );
 }
 
-// Widget reuseable_DropDown({required String title, required int remind}) {
-//   return Container(
-//     width: double.maxFinite,
-//     height: 70,
-//     child: Column(
-//       mainAxisAlignment: MainAxisAlignment.start,
-//       crossAxisAlignment: CrossAxisAlignment.start,
-//       children: [
-//         reuseable_TextTitle(title: title),
-//         Container(
-//           // padding: EdgeInsets.only(),
-//           width: double.maxFinite,
-//           decoration: BoxDecoration(
-//               border:
-//                   Border.all(color: Get.isDarkMode ? Colors.white : darkGrey)),
-//           alignment: Alignment.centerRight,
-//           child: Row(
-//             mainAxisAlignment: MainAxisAlignment.spaceBetween,
-//             children: [
-//               Text(remind.toString()),
-//               Icon(Icons.arrow_downward_outlined)
-//             ],
-//           ),
-//         )
-//       ],
-//     ),
-//   );
-// }
+Widget reusable_button_BottomSheet(
+    {VoidCallback? onPressed, required String text}) {
+  return TextButton(
+      onPressed: onPressed,
+      child: Container(
+        height: 40,
+        width: double.maxFinite,
+        margin: EdgeInsets.symmetric(horizontal: 15),
+        alignment: Alignment.center,
+        decoration: BoxDecoration(
+          borderRadius: BorderRadius.circular(15),
+          color: text == 'Task Completed'
+              ? blueColor
+              : text == 'Delete Task'
+                  ? pinkColor
+                  : Colors.white,
+          border: text == 'Close' ? Border.all(color: Colors.black) : null,
+        ),
+        child: Text(
+          text,
+          style: text == 'Close'
+              ? GoogleFonts.lato(fontSize: 13, color: Colors.black)
+              : buttonText,
+        ),
+      ));
+}
