@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
-import 'package:notification/controller/style_config.dart';
+import 'package:notification/utils/style_config.dart';
 import 'package:notification/widgets/reuseable_widget.dart';
 
 Widget dateNow() {

@@ -2,8 +2,8 @@
 
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:intl/intl.dart';
-import 'package:notification/controller/style_config.dart';
+
+import 'package:notification/utils/style_config.dart';
 import 'package:notification/controller/theme_controller.dart';
 import 'package:notification/services/notification_service.dart';
 import 'package:notification/widgets/const_custorm_widget.dart';

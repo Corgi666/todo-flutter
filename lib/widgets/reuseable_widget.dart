@@ -1,6 +1,6 @@
 import 'package:get/get.dart';
 import 'package:flutter/material.dart';
-import 'package:notification/controller/style_config.dart';
+import 'package:notification/utils/style_config.dart';
 import 'package:notification/controller/theme_controller.dart';
 
 Widget reuseable_Button({required String lable, required VoidCallback onTap}) {

@@ -1,11 +1,18 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:notification/screens/addTask_screen.dart';
-import 'package:notification/screens/homepage_screen.dart';
+import 'package:notification/DB/db_helper.dart';
 
+import 'package:notification/services/route_service.dart';
+import 'package:notification/test.dart';
+import 'package:notification/utils/dependencies.dart';
+import 'package:sqflite/sqflite.dart';
 import 'controller/theme_controller.dart';
 
-void main(List<String> args) {
+void main(List<String> args) async {
+  WidgetsFlutterBinding.ensureInitialized();
+  await DBHelper.initDB();
+
+  dep();
   runApp(const MyApp());
 }
 
@@ -20,18 +27,9 @@ class MyApp extends StatelessWidget {
       title: 'ToDo Flutter',
       themeMode: ThemeMode.system, //theme like system
       theme: Themes.light, //Theme form theme_controller
-      darkTheme: Themes.dark,
-      home: const HomePage(),
-      getPages: [
-        GetPage(
-          name: '/',
-          page: () => const HomePage(),
-        ),
-        GetPage(
-          name: '/addtask',
-          page: () => const AddTaskScreen(),
-        )
-      ], //Theme form theme_controller
+      darkTheme: Themes.dark, //Theme form theme_controller
+      // home: const MyWidget(),
+      getPages: routeService, //Get Route form routeService
     );
   }
 }

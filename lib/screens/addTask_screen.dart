@@ -4,7 +4,9 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
 import 'package:intl/intl.dart';
-import 'package:notification/controller/style_config.dart';
+import 'package:notification/controller/task_controller.dart';
+import 'package:notification/models/task_model.dart';
+import 'package:notification/utils/style_config.dart';
 import 'package:notification/controller/theme_controller.dart';
 import 'package:notification/widgets/const_custorm_widget.dart';
 import 'package:notification/widgets/reuseable_widget.dart';
@@ -66,11 +68,8 @@ class _AddTaskScreenState extends State<AddTaskScreen> {
 
   final TextEditingController _titleController = TextEditingController();
   final TextEditingController _noteController = TextEditingController();
-  final TextEditingController _dateController = TextEditingController();
-  final TextEditingController _startDateController = TextEditingController();
-  final TextEditingController _endDateController = TextEditingController();
-  final TextEditingController _remindController = TextEditingController();
-  final TextEditingController _reapeatController = TextEditingController();
+
+  final taskController = Get.find<TaskController>();
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -97,7 +96,6 @@ class _AddTaskScreenState extends State<AddTaskScreen> {
                 hint: 'Enter note here',
                 controller: _noteController),
             reuseable_Field(
-              controller: _dateController,
               title: 'Day',
               hint: DateFormat.yMd().format(
                 _dateSelect,
@@ -111,7 +109,6 @@ class _AddTaskScreenState extends State<AddTaskScreen> {
               children: [
                 Expanded(
                   child: reuseable_Field(
-                      controller: _startDateController,
                       title: 'Start Time',
                       hint: _startTime,
                       widget: GestureDetector(
@@ -124,7 +121,6 @@ class _AddTaskScreenState extends State<AddTaskScreen> {
                 ),
                 Expanded(
                     child: reuseable_Field(
-                        controller: _endDateController,
                         title: 'End Time',
                         hint: _endTime,
                         widget: GestureDetector(
@@ -133,7 +129,6 @@ class _AddTaskScreenState extends State<AddTaskScreen> {
               ],
             ),
             reuseable_Field(
-              controller: _remindController,
               title: 'Remind',
               hint: '${_seletedRemind} minutes early',
               widget: DropdownButton(
@@ -151,7 +146,6 @@ class _AddTaskScreenState extends State<AddTaskScreen> {
               ),
             ),
             reuseable_Field(
-              controller: _reapeatController,
               title: 'Repeat',
               hint: _repeateSelected,
               widget: DropdownButton(
@@ -224,7 +218,7 @@ class _AddTaskScreenState extends State<AddTaskScreen> {
             )
           ],
         ),
-        reuseable_Button(lable: '+ Add', onTap: () => null),
+        reuseable_Button(lable: 'Crete Task', onTap: () => _validateData()),
       ],
     );
   }
@@ -240,6 +234,7 @@ class _AddTaskScreenState extends State<AddTaskScreen> {
       setState(() {
         _dateSelect = _pickerDate;
       });
+      print(_dateSelect);
     } else {
       print('null error');
     }
@@ -262,5 +257,61 @@ class _AddTaskScreenState extends State<AddTaskScreen> {
         });
       }
     }
+  }
+
+  _validateData() {
+    if (_titleController.text.isNotEmpty && _noteController.text.isNotEmpty) {
+      _addTaskToDB();
+      Get.back();
+    } else {
+      if (_titleController.text.isEmpty && _noteController.text.isNotEmpty) {
+        Get.snackbar(
+          'Alert',
+          'Type your Title',
+          snackPosition: SnackPosition.BOTTOM,
+          backgroundColor:
+              Get.isDarkMode ? Colors.white : Colors.grey.withOpacity(0.5),
+          icon: Icon(Icons.warning_amber_rounded),
+        );
+      } else if (_noteController.text.isEmpty &&
+          _titleController.text.isNotEmpty) {
+        Get.snackbar(
+          'Alert',
+          'Type your Note',
+          snackPosition: SnackPosition.BOTTOM,
+          backgroundColor:
+              Get.isDarkMode ? Colors.white : Colors.grey.withOpacity(0.5),
+          icon: Icon(Icons.warning_amber_rounded),
+        );
+      } else if (_titleController.text.isEmpty &&
+          _noteController.text.isEmpty) {
+        Get.snackbar(
+          'Alert',
+          'Title and Note is null',
+          colorText: Get.isDarkMode ? Colors.black : Colors.white,
+          snackPosition: SnackPosition.BOTTOM,
+          backgroundColor:
+              Get.isDarkMode ? Colors.white : Colors.grey.withOpacity(0.5),
+          icon: Icon(
+            Icons.warning_amber_rounded,
+            color: Get.isDarkMode ? Colors.black : Colors.white,
+          ),
+        );
+      }
+    }
+  }
+
+  _addTaskToDB() async {
+    int value = await taskController.addTask(
+        task: TaskModel(
+            title: _titleController.text,
+            note: _noteController.text,
+            date: DateFormat.yMd().format(_dateSelect),
+            startTime: _startTime,
+            endTime: _endTime,
+            color: _colorSelected,
+            remind: _seletedRemind,
+            repeat: _repeateSelected));
+    print('My id is $value');
   }
 }
