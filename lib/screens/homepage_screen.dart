@@ -238,9 +238,7 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
                 reusable_button_BottomSheet(
                   text: 'Task Completed',
                   onPressed: () {
-                    setState(() {
-                      task.isCompleted = 1;
-                    });
+                    controller.complete(task: task);
                     Get.back();
                     print(task.isCompleted);
                   },

@@ -56,4 +56,13 @@ CREATE TABLE $_tableName (
     print('deleted');
     Get.find<TaskController>().getTask();
   }
+
+  static Future<int> updateIsCompleted({required TaskModel task}) async {
+    return await _db!.update(
+      _tableName,
+      {'isCompleted': 1},
+      where: 'id=?',
+      whereArgs: [task.id],
+    );
+  }
 }
