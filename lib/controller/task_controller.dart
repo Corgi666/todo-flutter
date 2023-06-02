@@ -98,17 +98,20 @@ class TaskController extends GetxController {
     return await DBHelper.insert(task);
   }
 
-  void getTask() async {
+  Future<void> getTask() async {
     List<Map<String, dynamic>> tasks = await DBHelper.query();
     taskList.assignAll(tasks.map((e) => TaskModel.fromJson(e)).toList());
+    update();
   }
 
   void deleteTask({required TaskModel task}) {
     DBHelper.delete(task: task);
+    update();
   }
 
-  void complete({required TaskModel task}) {
+  void complete({required TaskModel task}) async {
     print(task.id);
-    DBHelper.updateIsCompleted(task: task);
+    await DBHelper.updateIsCompleted(task: task);
+    update();
   }
 }
