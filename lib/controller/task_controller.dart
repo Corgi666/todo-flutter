@@ -109,7 +109,7 @@ class TaskController extends GetxController {
     update();
   }
 
-  void complete({required TaskModel task}) async {
+  Future<void> complete({required TaskModel task}) async {
     print(task.id);
     await DBHelper.updateIsCompleted(task: task);
     update();

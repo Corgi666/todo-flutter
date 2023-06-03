@@ -135,98 +135,118 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
   }
 
   Widget showTaskSection() {
-    return Expanded(
-      child: Obx(
-        () => ListView.builder(
-            itemCount: controller.taskList.length,
-            itemBuilder: (context, index) {
-              var colorIndex = controller.taskList[index].color;
-              var taskList = controller.taskList[index];
-              // print(DateFormat.yMd().format(_selectedDate));
-              print(taskList.date);
-              if (DateFormat.yMd().format(_selectedDate).toString() ==
-                  taskList.date) {
-                print('True');
-              }
-              return DateFormat.yMd().format(_selectedDate).toString() ==
-                      taskList.date
-                  ? GestureDetector(
-                      onTap: () => _showButtomSheet(context, taskList),
-                      child: Container(
-                        margin: EdgeInsets.only(right: 20, left: 20, top: 10),
-                        height: 100,
-                        width: MediaQuery.of(context).size.width,
-                        decoration: BoxDecoration(
-                            borderRadius: BorderRadius.circular(20),
-                            color: _colorList[colorIndex]),
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: [
-                            Container(
-                              margin: EdgeInsets.only(
-                                  left: 10, top: 10, bottom: 10),
-                              child: Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
+    return FutureBuilder(
+      future: controller.getTask(),
+      builder: (context, snapshot) {
+        switch (snapshot.connectionState) {
+          case ConnectionState.waiting:
+            return Container(
+              child: Text('Waiting'),
+            );
+          case ConnectionState.none:
+            return Container(
+              child: Text('None'),
+            );
+          case ConnectionState.active:
+            return Container(
+              child: Text('active'),
+            );
+          case ConnectionState.done:
+            return Expanded(
+              child: Obx(
+                () => ListView.builder(
+                    itemCount: controller.taskList.length,
+                    itemBuilder: (context, index) {
+                      var colorIndex = controller.taskList[index].color;
+                      var taskList = controller.taskList[index];
+                      // print(DateFormat.yMd().format(_selectedDate));
+                      return Visibility(
+                          visible: DateFormat.yMd()
+                                  .format(_selectedDate)
+                                  .toString() ==
+                              taskList.date,
+                          child: GestureDetector(
+                            onTap: () => _showButtomSheet(context, taskList),
+                            child: Container(
+                              margin:
+                                  EdgeInsets.only(right: 20, left: 20, top: 10),
+                              height: 100,
+                              width: MediaQuery.of(context).size.width,
+                              decoration: BoxDecoration(
+                                  borderRadius: BorderRadius.circular(20),
+                                  color: _colorList[colorIndex]),
+                              child: Row(
                                 mainAxisAlignment:
                                     MainAxisAlignment.spaceBetween,
                                 children: [
-                                  Text(
-                                    taskList.title,
-                                    style: buttonText,
-                                  ),
-                                  Row(
-                                    children: [
-                                      Icon(
-                                        Icons.access_time_rounded,
-                                        size: 13,
-                                        color: Colors.white,
-                                      ),
-                                      Text(
-                                        ' ${taskList.startTime}',
-                                        style: buttonText,
-                                      ),
-                                      Text(
-                                        ' - ${taskList.endTime}',
-                                        style: buttonText,
-                                      )
-                                    ],
-                                  ),
-                                  Text(
-                                    taskList.note,
-                                    style: buttonText,
-                                  )
-                                ],
-                              ),
-                            ),
-                            Container(
-                              padding: EdgeInsets.only(right: 10),
-                              child: Row(
-                                children: [
                                   Container(
-                                    margin: EdgeInsets.only(right: 4),
-                                    height: 70,
-                                    width: 0.5,
-                                    color: Colors.grey[200],
+                                    margin: EdgeInsets.only(
+                                        left: 10, top: 10, bottom: 10),
+                                    child: Column(
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.start,
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.spaceBetween,
+                                      children: [
+                                        Text(
+                                          taskList.title,
+                                          style: buttonText,
+                                        ),
+                                        Row(
+                                          children: [
+                                            Icon(
+                                              Icons.access_time_rounded,
+                                              size: 13,
+                                              color: Colors.white,
+                                            ),
+                                            Text(
+                                              ' ${taskList.startTime}',
+                                              style: buttonText,
+                                            ),
+                                            Text(
+                                              ' - ${taskList.endTime}',
+                                              style: buttonText,
+                                            )
+                                          ],
+                                        ),
+                                        Text(
+                                          taskList.note,
+                                          style: buttonText,
+                                        )
+                                      ],
+                                    ),
                                   ),
-                                  RotatedBox(
-                                    quarterTurns: 3,
-                                    child: Text(
-                                      taskList.isCompleted == 1
-                                          ? "COMPLETED"
-                                          : "TODO",
-                                      style: buttonText,
+                                  Container(
+                                    padding: EdgeInsets.only(right: 10),
+                                    child: Row(
+                                      children: [
+                                        Container(
+                                          margin: EdgeInsets.only(right: 4),
+                                          height: 70,
+                                          width: 0.5,
+                                          color: Colors.grey[200],
+                                        ),
+                                        RotatedBox(
+                                          quarterTurns: 3,
+                                          child: Text(
+                                            taskList.isCompleted == 1
+                                                ? "COMPLETED"
+                                                : "TODO",
+                                            style: buttonText,
+                                          ),
+                                        )
+                                      ],
                                     ),
                                   )
                                 ],
                               ),
-                            )
-                          ],
-                        ),
-                      ),
-                    )
-                  : null;
-            }),
-      ),
+                            ),
+                          ));
+                    }),
+              ),
+            );
+        }
+      },
     );
   }
 
